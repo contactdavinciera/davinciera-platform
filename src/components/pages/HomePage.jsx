@@ -75,27 +75,36 @@ const HomePage = () => {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-32 geometric-pattern">
-        <div className="container mx-auto px-4">
+      <section className="relative py-20 lg:py-32 geometric-pattern overflow-hidden">
+        {/* Logo Vitruviano de fundo */}
+        <div className="absolute top-10 right-10 opacity-5 hidden lg:block">
+          <img 
+            src="/davinciera_gold_final.png" 
+            alt="DaVinciEra Background" 
+            className="w-96 h-96 object-contain"
+          />
+        </div>
+        
+        <div className="container mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8 fade-in">
               <div className="space-y-4">
-                <h1 className="text-4xl lg:text-6xl font-bold leading-tight text-shadow">
+                <h1 className="text-4xl lg:text-6xl font-bold leading-tight text-shadow font-orbitron">
                   Where <span className="davinci-gradient-text">Renaissance</span> Meets <span className="davinci-gradient-text">Innovation</span>
                 </h1>
-                <p className="text-xl text-muted-foreground max-w-lg">
+                <p className="text-xl text-muted-foreground max-w-lg font-inter">
                   Transform your learning journey with cutting-edge courses taught by world-class instructors. Master skills that matter in today's digital world.
                 </p>
               </div>
               
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/marketplace">
-                  <Button size="lg" className="davinci-gradient glow-effect text-lg px-8 py-6">
+                  <Button size="lg" className="davinci-gradient glow-effect text-lg px-8 py-6 font-inter">
                     Explore Courses
                     <ChevronRight className="ml-2 w-5 h-5" />
                   </Button>
                 </Link>
-                <Button variant="outline" size="lg" className="text-lg px-8 py-6">
+                <Button variant="outline" size="lg" className="text-lg px-8 py-6 font-inter">
                   <Play className="mr-2 w-5 h-5" />
                   Watch Demo
                 </Button>
@@ -103,16 +112,16 @@ const HomePage = () => {
 
               <div className="flex items-center space-x-8 pt-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold davinci-gradient-text">4.9★</div>
-                  <div className="text-sm text-muted-foreground">Average Rating</div>
+                  <div className="text-2xl font-bold davinci-gradient-text font-orbitron">4.9★</div>
+                  <div className="text-sm text-muted-foreground font-inter">Average Rating</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold davinci-gradient-text">50K+</div>
-                  <div className="text-sm text-muted-foreground">Happy Students</div>
+                  <div className="text-2xl font-bold davinci-gradient-text font-orbitron">50K+</div>
+                  <div className="text-sm text-muted-foreground font-inter">Happy Students</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold davinci-gradient-text">2.5K+</div>
-                  <div className="text-sm text-muted-foreground">Expert Instructors</div>
+                  <div className="text-2xl font-bold davinci-gradient-text font-orbitron">2.5K+</div>
+                  <div className="text-sm text-muted-foreground font-inter">Expert Instructors</div>
                 </div>
               </div>
             </div>

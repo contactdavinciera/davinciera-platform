@@ -26,12 +26,14 @@ const Header = ({ user, cartCount }) => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
-            <div className="hexagon w-10 h-10 davinci-gradient flex items-center justify-center">
-              <div className="text-white text-xs font-bold">DV</div>
-            </div>
+            <img 
+              src="/davinciera_icon_final.png" 
+              alt="DaVinciEra - Homem Vitruviano" 
+              className="w-10 h-10 object-contain"
+            />
             <div className="hidden sm:block">
-              <h1 className="text-xl font-bold davinci-gradient-text">DaVinciEra</h1>
-              <p className="text-xs text-muted-foreground -mt-1">Learning Platform</p>
+              <h1 className="text-xl font-bold davinci-gradient-text font-orbitron">DaVinciEra</h1>
+              <p className="text-xs text-muted-foreground -mt-1 font-inter">Learning Platform</p>
             </div>
           </Link>
 
