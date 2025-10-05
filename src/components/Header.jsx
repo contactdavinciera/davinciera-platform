@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
+import { useAuth } from '../contexts/AuthContext'
+import UserMenu from './auth/UserMenu'
 import { 
   Search, 
   ShoppingCart, 
@@ -13,9 +15,10 @@ import {
   TrendingUp
 } from 'lucide-react'
 
-const Header = ({ user, cartCount }) => {
+const Header = ({ cartCount }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const { user, isAuthenticated } = useAuth()
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
@@ -58,41 +61,57 @@ const Header = ({ user, cartCount }) => {
               <Link to="/marketplace" className="text-sm font-medium hover:text-primary transition-colors">
                 Courses
               </Link>
-              <Link to="/instructor-dashboard" className="text-sm font-medium hover:text-primary transition-colors">
-                Teach
-              </Link>
-              <Link to="/affiliates" className="text-sm font-medium hover:text-primary transition-colors">
-                Affiliates
-              </Link>
+              {isAuthenticated && user?.role === 'instructor' && (
+                <Link to="/instructor-dashboard" className="text-sm font-medium hover:text-primary transition-colors">
+                  Teach
+                </Link>
+              )}
+              {isAuthenticated && user?.role === 'affiliate' && (
+                <Link to="/affiliate-dashboard" className="text-sm font-medium hover:text-primary transition-colors">
+                  Affiliates
+                </Link>
+              )}
+              {!isAuthenticated && (
+                <>
+                  <Link to="/register?role=instructor" className="text-sm font-medium hover:text-primary transition-colors">
+                    Teach
+                  </Link>
+                  <Link to="/register?role=affiliate" className="text-sm font-medium hover:text-primary transition-colors">
+                    Affiliates
+                  </Link>
+                </>
+              )}
             </nav>
 
             {/* Cart */}
-            <Link to="/checkout" className="relative">
-              <Button variant="ghost" size="sm" className="relative">
-                <ShoppingCart className="w-5 h-5" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {cartCount}
-                  </span>
-                )}
-              </Button>
-            </Link>
-
-            {/* User Menu */}
-            {user ? (
-              <Link to="/student-dashboard">
-                <Button variant="ghost" size="sm">
-                  <User className="w-5 h-5" />
+            {isAuthenticated && (
+              <Link to="/checkout" className="relative">
+                <Button variant="ghost" size="sm" className="relative">
+                  <ShoppingCart className="w-5 h-5" />
+                  {cartCount > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {cartCount}
+                    </span>
+                  )}
                 </Button>
               </Link>
+            )}
+
+            {/* User Menu */}
+            {isAuthenticated ? (
+              <UserMenu />
             ) : (
               <div className="flex items-center space-x-2">
-                <Button variant="ghost" size="sm">
-                  Log In
-                </Button>
-                <Button size="sm" className="davinci-gradient">
-                  Sign Up
-                </Button>
+                <Link to="/login">
+                  <Button variant="ghost" size="sm">
+                    Log In
+                  </Button>
+                </Link>
+                <Link to="/register">
+                  <Button size="sm" className="davinci-gradient">
+                    Sign Up
+                  </Button>
+                </Link>
               </div>
             )}
 
@@ -136,32 +155,64 @@ const Header = ({ user, cartCount }) => {
                 <BookOpen className="w-4 h-4" />
                 <span>Browse Courses</span>
               </Link>
-              <Link 
-                to="/instructor-dashboard" 
-                className="flex items-center space-x-3 text-sm font-medium hover:text-primary transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <Users className="w-4 h-4" />
-                <span>Become Instructor</span>
-              </Link>
-              <Link 
-                to="/affiliates" 
-                className="flex items-center space-x-3 text-sm font-medium hover:text-primary transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <TrendingUp className="w-4 h-4" />
-                <span>Affiliate Program</span>
-              </Link>
-              <div className="pt-4 border-t">
-                <div className="flex flex-col space-y-2">
-                  <Button variant="ghost" className="justify-start">
-                    Log In
-                  </Button>
-                  <Button className="davinci-gradient justify-start">
-                    Sign Up Free
-                  </Button>
-                </div>
-              </div>
+              
+              {isAuthenticated ? (
+                <>
+                  {user?.role === 'instructor' && (
+                    <Link 
+                      to="/instructor-dashboard" 
+                      className="flex items-center space-x-3 text-sm font-medium hover:text-primary transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <Users className="w-4 h-4" />
+                      <span>Instructor Dashboard</span>
+                    </Link>
+                  )}
+                  {user?.role === 'affiliate' && (
+                    <Link 
+                      to="/affiliate-dashboard" 
+                      className="flex items-center space-x-3 text-sm font-medium hover:text-primary transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <TrendingUp className="w-4 h-4" />
+                      <span>Affiliate Dashboard</span>
+                    </Link>
+                  )}
+                </>
+              ) : (
+                <>
+                  <Link 
+                    to="/register?role=instructor" 
+                    className="flex items-center space-x-3 text-sm font-medium hover:text-primary transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <Users className="w-4 h-4" />
+                    <span>Become Instructor</span>
+                  </Link>
+                  <Link 
+                    to="/register?role=affiliate" 
+                    className="flex items-center space-x-3 text-sm font-medium hover:text-primary transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <TrendingUp className="w-4 h-4" />
+                    <span>Affiliate Program</span>
+                  </Link>
+                  <div className="pt-4 border-t">
+                    <div className="flex flex-col space-y-2">
+                      <Link to="/login" onClick={() => setIsMenuOpen(false)}>
+                        <Button variant="ghost" className="justify-start w-full">
+                          Log In
+                        </Button>
+                      </Link>
+                      <Link to="/register" onClick={() => setIsMenuOpen(false)}>
+                        <Button className="davinci-gradient justify-start w-full">
+                          Sign Up Free
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                </>
+              )}
             </nav>
           </div>
         </div>

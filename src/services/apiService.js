@@ -6,11 +6,17 @@ class ApiService {
     this.baseURL = API_BASE_URL;
   }
 
+  getAuthHeaders() {
+    const token = localStorage.getItem('token');
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  }
+
   async request(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
     const config = {
       headers: {
         'Content-Type': 'application/json',
+        ...this.getAuthHeaders(),
         ...options.headers,
       },
       ...options,
@@ -20,7 +26,12 @@ class ApiService {
       const response = await fetch(url, config);
       
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        if (response.status === 401) {
+          localStorage.removeItem('token');
+          window.location.href = '/login';
+        }
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
       
       // Handle empty responses (like DELETE operations)
@@ -33,6 +44,25 @@ class ApiService {
       console.error('API request failed:', error);
       throw error;
     }
+  }
+
+  // Authentication API
+  async login(email, password) {
+    return this.request('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    });
+  }
+
+  async register(name, email, password, role = 'student') {
+    return this.request('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({ name, email, password, role }),
+    });
+  }
+
+  async getProfile() {
+    return this.request('/auth/profile');
   }
 
   // Users API
@@ -174,6 +204,35 @@ class ApiService {
       };
     }
   }
+
+  // Simple API methods for auth context
+  get(endpoint, options = {}) {
+    return this.request(endpoint, options);
+  }
+
+  post(endpoint, data, options = {}) {
+    return this.request(endpoint, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      ...options,
+    });
+  }
+
+  put(endpoint, data, options = {}) {
+    return this.request(endpoint, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+      ...options,
+    });
+  }
+
+  delete(endpoint, options = {}) {
+    return this.request(endpoint, {
+      method: 'DELETE',
+      ...options,
+    });
+  }
 }
 
-export default new ApiService();
+export const apiService = new ApiService();
+export default apiService;
