@@ -1,0 +1,126 @@
+[
+  {
+    "id": "crs-001",
+    "title": "Complete Web Development Bootcamp",
+    "subtitle": "Become a Full-Stack Developer in 2025",
+    "description": "This comprehensive course covers everything you need to know to become a professional web developer. Learn HTML, CSS, JavaScript, React, Node.js, Express, MongoDB, and more. Includes hands-on projects and real-world applications.",
+    "instructor": {
+      "name": "Leonardo Martinez",
+      "bio": "Experienced full-stack developer and educator with over 10 years in the industry.",
+      "avatarUrl": "/api/placeholder/50/50"
+    },
+    "price": 89.99,
+    "originalPrice": 199.99,
+    "thumbnailUrl": "/api/placeholder/300/200",
+    "previewVideoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "categoryId": "cat-tech",
+    "level": "Beginner to Advanced",
+    "duration": "42 hours",
+    "rating": 4.9,
+    "numberOfRatings": 15420,
+    "numberOfStudents": 54321,
+    "whatYouWillLearn": [
+      "Build responsive websites with HTML5 and CSS3",
+      "Develop interactive user interfaces with JavaScript and React",
+      "Create robust backend APIs with Node.js and Express",
+      "Manage databases with MongoDB",
+      "Deploy web applications to the cloud"
+    ],
+    "requirements": [
+      "Basic computer literacy",
+      "No prior coding experience required"
+    ],
+    "modules": [
+      { "title": "Module 1: HTML & CSS Fundamentals", "lessons": ["Introduction to Web", "HTML Basics", "CSS Styling"] },
+      { "title": "Module 2: JavaScript Essentials", "lessons": ["Variables and Data Types", "Functions", "DOM Manipulation"] },
+      { "title": "Module 3: React - The Frontend Library", "lessons": ["Components", "State and Props", "Hooks"] },
+      { "title": "Module 4: Backend with Node.js & Express", "lessons": ["Node.js Basics", "Building RESTful APIs", "Authentication"] },
+      { "title": "Module 5: Database with MongoDB", "lessons": ["MongoDB CRUD Operations", "Mongoose ODM", "Data Modeling"] }
+    ],
+    "lastUpdated": "2025-10-05",
+    "language": "English",
+    "tags": ["web development", "react", "frontend", "backend", "fullstack", "javascript"]
+  },
+  {
+    "id": "crs-002",
+    "title": "Digital Marketing Mastery",
+    "subtitle": "Boost Your Brand Online",
+    "description": "Learn the essential strategies and tools for successful digital marketing. Covers SEO, SEM, social media marketing, content marketing, email marketing, and analytics.",
+    "instructor": {
+      "name": "Isabella Chen",
+      "bio": "Digital marketing expert with a proven track record of growing online businesses.",
+      "avatarUrl": "/api/placeholder/50/50"
+    },
+    "price": 79.99,
+    "originalPrice": 149.99,
+    "thumbnailUrl": "/api/placeholder/300/200",
+    "previewVideoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "categoryId": "cat-marketing",
+    "level": "Intermediate",
+    "duration": "28 hours",
+    "rating": 4.8,
+    "numberOfRatings": 8930,
+    "numberOfStudents": 32100,
+    "whatYouWillLearn": [
+      "Develop a comprehensive digital marketing strategy",
+      "Optimize websites for search engines (SEO)",
+      "Run effective social media campaigns",
+      "Create engaging content",
+      "Analyze marketing performance with data"
+    ],
+    "requirements": [
+      "Basic understanding of internet and social media"
+    ],
+    "modules": [
+      { "title": "Module 1: Introduction to Digital Marketing", "lessons": ["Overview", "Key Concepts"] },
+      { "title": "Module 2: Search Engine Optimization (SEO)", "lessons": ["Keyword Research", "On-Page SEO", "Off-Page SEO"] },
+      { "title": "Module 3: Social Media Marketing", "lessons": ["Platform Strategy", "Content Creation", "Paid Ads"] },
+      { "title": "Module 4: Content & Email Marketing", "lessons": ["Content Strategy", "Email Campaigns", "Automation"] },
+      { "title": "Module 5: Analytics & Reporting", "lessons": ["Google Analytics", "KPIs", "Reporting Tools"] }
+    ],
+    "lastUpdated": "2025-09-28",
+    "language": "English",
+    "tags": ["digital marketing", "seo", "social media", "content marketing", "email marketing"]
+  },
+  {
+    "id": "crs-003",
+    "title": "UI/UX Design Fundamentals",
+    "subtitle": "Craft Intuitive User Experiences",
+    "description": "Master the principles of User Interface (UI) and User Experience (UX) design. Learn wireframing, prototyping, user research, and usability testing to create beautiful and functional digital products.",
+    "instructor": {
+      "name": "Marco Rossi",
+      "bio": "Award-winning UI/UX designer with a passion for user-centered design.",
+      "avatarUrl": "/api/placeholder/50/50"
+    },
+    "price": 94.99,
+    "originalPrice": 179.99,
+    "thumbnailUrl": "/api/placeholder/300/200",
+    "previewVideoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "categoryId": "cat-design",
+    "level": "Beginner",
+    "duration": "35 hours",
+    "rating": 4.9,
+    "numberOfRatings": 12340,
+    "numberOfStudents": 45678,
+    "whatYouWillLearn": [
+      "Understand UI/UX design principles",
+      "Conduct user research and create personas",
+      "Design wireframes and interactive prototypes",
+      "Perform usability testing",
+      "Create visually appealing interfaces"
+    ],
+    "requirements": [
+      "No prior design experience needed"
+    ],
+    "modules": [
+      { "title": "Module 1: Introduction to UI/UX", "lessons": ["What is UI/UX?", "Importance of User-Centered Design"] },
+      { "title": "Module 2: User Research & Analysis", "lessons": ["User Interviews", "Personas", "Journey Mapping"] },
+      { "title": "Module 3: Wireframing & Prototyping", "lessons": ["Low-Fidelity Wireframes", "High-Fidelity Prototypes", "Tools"] },
+      { "title": "Module 4: Visual Design & Branding", "lessons": ["Color Theory", "Typography", "Iconography"] },
+      { "title": "Module 5: Usability Testing & Iteration", "lessons": ["Test Planning", "Conducting Tests", "Analyzing Feedback"] }
+    ],
+    "lastUpdated": "2025-10-01",
+    "language": "English",
+    "tags": ["ui design", "ux design", "product design", "figma", "sketch"]
+  }
+]

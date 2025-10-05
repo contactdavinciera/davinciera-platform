@@ -15,62 +15,36 @@ import {
   ChevronRight,
   CheckCircle
 } from 'lucide-react'
+import dataService from '@/services/dataService'
 
 const HomePage = () => {
-  const featuredCourses = [
-    {
-      id: 1,
-      title: "Complete Web Development Bootcamp",
-      instructor: "Leonardo Martinez",
-      rating: 4.9,
-      students: 15420,
-      duration: "42 hours",
-      price: 89.99,
-      originalPrice: 199.99,
-      image: "/api/placeholder/300/200",
-      category: "Technology",
-      level: "Beginner to Advanced"
-    },
-    {
-      id: 2,
-      title: "Digital Marketing Mastery",
-      instructor: "Isabella Chen",
-      rating: 4.8,
-      students: 8930,
-      duration: "28 hours",
-      price: 79.99,
-      originalPrice: 149.99,
-      image: "/api/placeholder/300/200",
-      category: "Marketing",
-      level: "Intermediate"
-    },
-    {
-      id: 3,
-      title: "UI/UX Design Fundamentals",
-      instructor: "Marco Rossi",
-      rating: 4.9,
-      students: 12340,
-      duration: "35 hours",
-      price: 94.99,
-      originalPrice: 179.99,
-      image: "/api/placeholder/300/200",
-      category: "Design",
-      level: "Beginner"
-    }
-  ]
+  // Get dynamic data from dataService
+  const featuredCourses = dataService.getFeaturedCourses(3)
+  const categories = dataService.getAllCategories()
+  const stats = dataService.getStats()
 
-  const categories = [
-    { name: "Technology", icon: Zap, courses: 1250, color: "text-blue-500" },
-    { name: "Business", icon: TrendingUp, courses: 890, color: "text-green-500" },
-    { name: "Design", icon: Target, courses: 720, color: "text-purple-500" },
-    { name: "Marketing", icon: Globe, courses: 650, color: "text-orange-500" }
-  ]
+  // Icon mapping for categories
+  const iconMap = {
+    'Zap': Zap,
+    'TrendingUp': TrendingUp,
+    'Target': Target,
+    'Globe': Globe
+  }
 
-  const stats = [
-    { label: "Active Students", value: "50,000+", icon: Users },
-    { label: "Expert Instructors", value: "2,500+", icon: Award },
-    { label: "Course Hours", value: "100,000+", icon: Clock },
-    { label: "Course Completion", value: "95%", icon: CheckCircle }
+  // Color mapping for categories
+  const colorMap = {
+    'Technology': 'text-blue-500',
+    'Business': 'text-green-500',
+    'Design': 'text-purple-500',
+    'Marketing': 'text-orange-500'
+  }
+
+  // Static stats with dynamic data where available
+  const displayStats = [
+    { label: "Active Students", value: `${Math.floor(stats.totalStudents / 1000)}K+`, icon: Users },
+    { label: "Expert Instructors", value: `${stats.totalInstructors}+`, icon: Award },
+    { label: "Available Courses", value: `${stats.totalCourses}+`, icon: Clock },
+    { label: "Average Rating", value: `${stats.averageRating}/5`, icon: CheckCircle }
   ]
 
   return (
@@ -252,7 +226,7 @@ const HomePage = () => {
       <section className="py-16 bg-card">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
+            {displayStats.map((stat, index) => (
               <div key={index} className="text-center space-y-2">
                 <stat.icon className="w-8 h-8 text-primary mx-auto" />
                 <div className="text-3xl font-bold davinci-gradient-text">{stat.value}</div>
@@ -274,21 +248,26 @@ const HomePage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {categories.map((category, index) => (
-              <Link key={index} to={`/marketplace?category=${category.name.toLowerCase()}`}>
-                <div className="group p-6 bg-card rounded-xl border card-hover cursor-pointer">
-                  <div className="space-y-4">
-                    <div className={`w-12 h-12 rounded-lg bg-muted flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                      <category.icon className={`w-6 h-6 ${category.color}`} />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold mb-1">{category.name}</h3>
-                      <p className="text-sm text-muted-foreground">{category.courses} courses</p>
+            {categories.map((category, index) => {
+              const IconComponent = iconMap[category.icon]
+              const colorClass = colorMap[category.name]
+              
+              return (
+                <Link key={index} to={`/marketplace?category=${category.slug}`}>
+                  <div className="group p-6 bg-card rounded-xl border card-hover cursor-pointer">
+                    <div className="space-y-4">
+                      <div className={`w-12 h-12 rounded-lg bg-muted flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                        <IconComponent className={`w-6 h-6 ${colorClass}`} />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold mb-1">{category.name}</h3>
+                        <p className="text-sm text-muted-foreground">{category.courseCount} courses</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              )
+            })}
           </div>
         </div>
       </section>
@@ -312,47 +291,51 @@ const HomePage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredCourses.map((course) => (
-              <Link key={course.id} to={`/course/${course.id}`}>
-                <div className="group bg-card rounded-xl overflow-hidden border card-hover">
-                  <div className="aspect-video bg-muted relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-                      <Play className="w-12 h-12 text-white opacity-80 group-hover:scale-110 transition-transform" />
-                    </div>
-                    <div className="absolute top-4 left-4">
-                      <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">
-                        {course.category}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <div className="p-6 space-y-4">
-                    <div className="space-y-2">
-                      <h3 className="text-lg font-semibold group-hover:text-primary transition-colors line-clamp-2">
-                        {course.title}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">by {course.instructor}</p>
+            {featuredCourses.map((course) => {
+              const category = dataService.getCategoryById(course.categoryId)
+              
+              return (
+                <Link key={course.id} to={`/course/${course.id}`}>
+                  <div className="group bg-card rounded-xl overflow-hidden border card-hover">
+                    <div className="aspect-video bg-muted relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+                        <Play className="w-12 h-12 text-white opacity-80 group-hover:scale-110 transition-transform" />
+                      </div>
+                      <div className="absolute top-4 left-4">
+                        <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">
+                          {category?.name || 'Course'}
+                        </span>
+                      </div>
                     </div>
                     
-                    <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                      <div className="flex items-center space-x-1">
-                        <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                        <span>{course.rating}</span>
+                    <div className="p-6 space-y-4">
+                      <div className="space-y-2">
+                        <h3 className="text-lg font-semibold group-hover:text-primary transition-colors line-clamp-2">
+                          {course.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">by {course.instructor.name}</p>
                       </div>
-                      <div className="flex items-center space-x-1">
-                        <Users className="w-4 h-4" />
-                        <span>{course.students.toLocaleString()}</span>
+                      
+                      <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                        <div className="flex items-center space-x-1">
+                          <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                          <span>{course.rating}</span>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <Users className="w-4 h-4" />
+                          <span>{course.numberOfStudents.toLocaleString()}</span>
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="flex items-center justify-between pt-2">
-                      <div className="text-lg font-semibold">${course.price}</div>
-                      <div className="text-sm text-muted-foreground line-through">${course.originalPrice}</div>
+                      <div className="flex items-center justify-between pt-2">
+                        <div className="text-lg font-semibold">${course.price}</div>
+                        <div className="text-sm text-muted-foreground line-through">${course.originalPrice}</div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              )
+            })}
           </div>
         </div>
       </section>
