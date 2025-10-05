@@ -1,0 +1,38 @@
+[
+  {
+    "id": "enr-001",
+    "userId": "usr-001",
+    "courseId": "crs-001",
+    "enrollmentDate": "2025-09-01",
+    "progress": 75,
+    "completedLessons": ["Module 1: HTML & CSS Fundamentals", "Module 2: JavaScript Essentials", "Module 3: React - The Frontend Library"],
+    "status": "in-progress"
+  },
+  {
+    "id": "enr-002",
+    "userId": "usr-001",
+    "courseId": "crs-002",
+    "enrollmentDate": "2025-09-10",
+    "progress": 100,
+    "completedLessons": ["Module 1: Introduction to Digital Marketing", "Module 2: Search Engine Optimization (SEO)", "Module 3: Social Media Marketing", "Module 4: Content & Email Marketing", "Module 5: Analytics & Reporting"],
+    "status": "completed"
+  },
+  {
+    "id": "enr-003",
+    "userId": "usr-004",
+    "courseId": "crs-001",
+    "enrollmentDate": "2025-09-05",
+    "progress": 30,
+    "completedLessons": ["Module 1: HTML & CSS Fundamentals"],
+    "status": "in-progress"
+  },
+  {
+    "id": "enr-004",
+    "userId": "usr-004",
+    "courseId": "crs-003",
+    "enrollmentDate": "2025-09-15",
+    "progress": 60,
+    "completedLessons": ["Module 1: Introduction to UI/UX", "Module 2: User Research & Analysis", "Module 3: Wireframing & Prototyping"],
+    "status": "in-progress"
+  }
+]

@@ -8,10 +8,10 @@ import Footer from './components/Footer'
 import HomePage from './components/pages/HomePage'
 import Marketplace from './components/pages/Marketplace'
 import CourseDetail from './components/pages/CourseDetail'
-import StudentDashboard from './components/pages/StudentDashboard'
-import InstructorDashboard from './components/pages/InstructorDashboard'
+import StudentDashboardPage from './components/pages/StudentDashboardPage'
+import InstructorDashboardPage from './components/pages/InstructorDashboardPage'
 import Checkout from './components/pages/Checkout'
-import Affiliates from './components/pages/Affiliates'
+import AffiliateDashboardPage from './components/pages/AffiliateDashboardPage'
 
 function App() {
   const [user, setUser] = useState(null)
@@ -35,10 +35,10 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/marketplace" element={<Marketplace addToCart={addToCart} />} />
             <Route path="/course/:id" element={<CourseDetail addToCart={addToCart} />} />
-            <Route path="/student-dashboard" element={<StudentDashboard user={user} />} />
-            <Route path="/instructor-dashboard" element={<InstructorDashboard user={user} />} />
+            <Route path="/student-dashboard" element={<StudentDashboardPage />} />
+            <Route path="/instructor-dashboard" element={<InstructorDashboardPage />} />
             <Route path="/checkout" element={<Checkout cart={cart} removeFromCart={removeFromCart} />} />
-            <Route path="/affiliates" element={<Affiliates />} />
+            <Route path="/affiliates" element={<AffiliateDashboardPage />} />
           </Routes>
         </main>
 

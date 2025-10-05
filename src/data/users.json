@@ -1,0 +1,52 @@
+[
+  {
+    "id": "usr-001",
+    "name": "Alice Smith",
+    "email": "alice.smith@example.com",
+    "role": "student",
+    "avatarUrl": "/api/placeholder/50/50"
+  },
+  {
+    "id": "usr-002",
+    "name": "Bob Johnson",
+    "email": "bob.johnson@example.com",
+    "role": "instructor",
+    "avatarUrl": "/api/placeholder/50/50",
+    "bio": "Experienced full-stack developer and educator with over 10 years in the industry.",
+    "payoutDetails": {"method": "PayPal", "email": "bob.paypal@example.com"}
+  },
+  {
+    "id": "usr-003",
+    "name": "Charlie Brown",
+    "email": "charlie.brown@example.com",
+    "role": "affiliate",
+    "avatarUrl": "/api/placeholder/50/50",
+    "affiliateCode": "CHARLIE10",
+    "payoutDetails": {"method": "Bank Transfer", "account": "123456789"}
+  },
+  {
+    "id": "usr-004",
+    "name": "Diana Prince",
+    "email": "diana.prince@example.com",
+    "role": "student",
+    "avatarUrl": "/api/placeholder/50/50"
+  },
+  {
+    "id": "usr-005",
+    "name": "Leonardo Martinez",
+    "email": "leonardo.martinez@example.com",
+    "role": "instructor",
+    "avatarUrl": "/api/placeholder/50/50",
+    "bio": "Experienced full-stack developer and educator with over 10 years in the industry.",
+    "payoutDetails": {"method": "PayPal", "email": "leo.paypal@example.com"}
+  },
+  {
+    "id": "usr-006",
+    "name": "Isabella Chen",
+    "email": "isabella.chen@example.com",
+    "role": "instructor",
+    "avatarUrl": "/api/placeholder/50/50",
+    "bio": "Digital marketing expert with a proven track record of growing online businesses.",
+    "payoutDetails": {"method": "Bank Transfer", "account": "987654321"}
+  }
+]
