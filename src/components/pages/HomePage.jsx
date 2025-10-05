@@ -1,3 +1,4 @@
+
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { 
@@ -76,7 +77,7 @@ const HomePage = () => {
     <div className="flex flex-col">
       {/* Hero Section */}
       <section className="relative py-20 lg:py-32 geometric-pattern overflow-hidden">
-        {/* Logo Vitruviano de fundo */}
+        {/* Vitruvian Logo Background */}
         <div className="absolute top-10 right-10 opacity-5 hidden lg:block">
           <img 
             src="/davinciera_gold_final.png" 
@@ -85,10 +86,10 @@ const HomePage = () => {
           />
         </div>
         
-        {/* Badge de excelência acadêmica */}
+        {/* Academic excellence badge */}
         <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-20">
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-full text-sm font-medium shadow-lg">
-            🎓 Padrão Acadêmico Internacional • Qualidade Mundial
+            🎓 International Academic Standard • World-Class Quality
           </div>
         </div>
         
@@ -335,31 +336,18 @@ const HomePage = () => {
                     
                     <div className="flex items-center space-x-4 text-sm text-muted-foreground">
                       <div className="flex items-center space-x-1">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                        <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
                         <span>{course.rating}</span>
                       </div>
                       <div className="flex items-center space-x-1">
                         <Users className="w-4 h-4" />
                         <span>{course.students.toLocaleString()}</span>
                       </div>
-                      <div className="flex items-center space-x-1">
-                        <Clock className="w-4 h-4" />
-                        <span>{course.duration}</span>
-                      </div>
                     </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="space-x-2">
-                        <span className="text-xl font-bold davinci-gradient-text">
-                          ${course.price}
-                        </span>
-                        <span className="text-sm text-muted-foreground line-through">
-                          ${course.originalPrice}
-                        </span>
-                      </div>
-                      <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                        {Math.round((1 - course.price / course.originalPrice) * 100)}% OFF
-                      </span>
+
+                    <div className="flex items-center justify-between pt-2">
+                      <div className="text-lg font-semibold">${course.price}</div>
+                      <div className="text-sm text-muted-foreground line-through">${course.originalPrice}</div>
                     </div>
                   </div>
                 </div>
@@ -368,36 +356,9 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-
-      {/* CTA Section */}
-      <section className="py-20 davinci-gradient">
-        <div className="container mx-auto px-4 text-center">
-          <div className="max-w-3xl mx-auto space-y-8 text-white">
-            <h2 className="text-3xl lg:text-4xl font-bold">
-              Ready to Transform Your Career?
-            </h2>
-            <p className="text-xl opacity-90">
-              Join thousands of learners who have already advanced their careers with DaVinciEra. 
-              Start your journey today with our comprehensive courses and expert guidance.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/marketplace">
-                <Button size="lg" variant="secondary" className="text-lg px-8 py-6">
-                  Start Learning Now
-                  <ChevronRight className="ml-2 w-5 h-5" />
-                </Button>
-              </Link>
-              <Link to="/instructor-dashboard">
-                <Button size="lg" variant="outline" className="text-lg px-8 py-6 border-white text-white hover:bg-white hover:text-primary">
-                  Become an Instructor
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   )
 }
 
 export default HomePage
+
