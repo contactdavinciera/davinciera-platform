@@ -1,4 +1,5 @@
 
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { 
@@ -18,10 +19,40 @@ import {
 import dataService from '@/services/dataService'
 
 const HomePage = () => {
-  // Get dynamic data from dataService
-  const featuredCourses = dataService.getFeaturedCourses(3)
-  const categories = dataService.getAllCategories()
-  const stats = dataService.getStats()
+  // State for dynamic data
+  const [featuredCourses, setFeaturedCourses] = useState([])
+  const [categories, setCategories] = useState([])
+  const [stats, setStats] = useState({
+    activeStudents: 0,
+    expertInstructors: 0,
+    availableCourses: 0,
+    averageRating: 0
+  })
+  const [loading, setLoading] = useState(true)
+
+  // Load data on component mount
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true)
+        const [coursesData, categoriesData, statsData] = await Promise.all([
+          dataService.getFeaturedCourses(3),
+          dataService.getAllCategories(),
+          dataService.getStats()
+        ])
+        
+        setFeaturedCourses(coursesData)
+        setCategories(categoriesData)
+        setStats(statsData)
+      } catch (error) {
+        console.error('Failed to load homepage data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadData()
+  }, [])
 
   // Icon mapping for categories
   const iconMap = {
@@ -39,12 +70,28 @@ const HomePage = () => {
     'Marketing': 'text-orange-500'
   }
 
-  // Static stats with dynamic data where available
+  // Dynamic stats display
   const displayStats = [
-    { label: "Active Students", value: `${Math.floor(stats.totalStudents / 1000)}K+`, icon: Users },
-    { label: "Expert Instructors", value: `${stats.totalInstructors}+`, icon: Award },
-    { label: "Available Courses", value: `${stats.totalCourses}+`, icon: Clock },
-    { label: "Average Rating", value: `${stats.averageRating}/5`, icon: CheckCircle }
+    { 
+      label: "Active Students", 
+      value: loading ? "..." : `${Math.floor(stats.activeStudents / 1000) || 0}K+`, 
+      icon: Users 
+    },
+    { 
+      label: "Expert Instructors", 
+      value: loading ? "..." : `${stats.expertInstructors || 0}+`, 
+      icon: Award 
+    },
+    { 
+      label: "Available Courses", 
+      value: loading ? "..." : `${stats.availableCourses || 0}+`, 
+      icon: Clock 
+    },
+    { 
+      label: "Average Rating", 
+      value: loading ? "..." : `${stats.averageRating || 0}/5`, 
+      icon: CheckCircle 
+    }
   ]
 
   return (

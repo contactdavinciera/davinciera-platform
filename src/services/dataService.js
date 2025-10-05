@@ -1,112 +1,228 @@
+import apiService from './apiService.js'
 import coursesData from '../data/courses.json'
 import categoriesData from '../data/categories.json'
-import usersData from '../data/users.json'
-import enrollmentsData from '../data/enrollments.json'
 
 class DataService {
   constructor() {
-    this.courses = coursesData
-    this.categories = categoriesData
-    this.users = usersData
-    this.enrollments = enrollmentsData
-    this.updateCategoryCounts()
-    this.linkInstructorsToCourses()
+    // Fallback data for when API is not available
+    this.fallbackCourses = coursesData
+    this.fallbackCategories = categoriesData
+    this.cache = {
+      courses: null,
+      categories: null,
+      users: null,
+      enrollments: null,
+      lastFetch: null
+    }
+    this.cacheTimeout = 5 * 60 * 1000 // 5 minutes
   }
 
-  // Update category course counts based on actual courses
-  updateCategoryCounts() {
-    this.categories = this.categories.map(category => ({
-      ...category,
-      courseCount: this.courses.filter(course => course.categoryId === category.id).length
-    }))
+  // Check if cache is valid
+  isCacheValid() {
+    return this.cache.lastFetch && (Date.now() - this.cache.lastFetch) < this.cacheTimeout
   }
 
-  // Link instructor data from users.json to courses
-  linkInstructorsToCourses() {
-    this.courses = this.courses.map(course => {
-      const instructor = this.users.find(user => user.name === course.instructor.name && user.role === 'instructor')
-      return {
-        ...course,
-        instructor: instructor ? { ...course.instructor, ...instructor } : course.instructor
-      }
-    })
+  // Fetch data from API with fallback to static data
+  async fetchWithFallback(apiMethod, fallbackData = null) {
+    try {
+      return await apiMethod()
+    } catch (error) {
+      console.warn('API request failed, using fallback data:', error.message)
+      return fallbackData || []
+    }
   }
 
   // Get all courses
-  getAllCourses() {
-    return this.courses
+  async getAllCourses() {
+    if (this.cache.courses && this.isCacheValid()) {
+      return this.cache.courses
+    }
+
+    const courses = await this.fetchWithFallback(
+      () => apiService.getCourses(),
+      this.fallbackCourses
+    )
+    
+    this.cache.courses = courses
+    this.cache.lastFetch = Date.now()
+    return courses
   }
 
   // Get all categories
-  getAllCategories() {
-    return this.categories
+  async getAllCategories() {
+    if (this.cache.categories && this.isCacheValid()) {
+      return this.cache.categories
+    }
+
+    // For categories, we'll use static data and update counts dynamically
+    const courses = await this.getAllCourses()
+    const categories = this.fallbackCategories.map(category => ({
+      ...category,
+      courseCount: courses.filter(course => course.categoryId === category.id).length
+    }))
+    
+    this.cache.categories = categories
+    return categories
   }
 
   // Get all users
-  getAllUsers() {
-    return this.users
+  async getAllUsers() {
+    if (this.cache.users && this.isCacheValid()) {
+      return this.cache.users
+    }
+
+    const users = await this.fetchWithFallback(() => apiService.getUsers())
+    this.cache.users = users
+    return users
   }
 
   // Get all enrollments
-  getAllEnrollments() {
-    return this.enrollments
+  async getAllEnrollments() {
+    if (this.cache.enrollments && this.isCacheValid()) {
+      return this.cache.enrollments
+    }
+
+    const enrollments = await this.fetchWithFallback(() => apiService.getEnrollments())
+    this.cache.enrollments = enrollments
+    return enrollments
   }
 
   // Get course by ID
-  getCourseById(id) {
-    return this.courses.find(course => course.id === id)
+  async getCourseById(id) {
+    try {
+      return await apiService.getCourse(id)
+    } catch (error) {
+      console.warn('API request failed, searching in fallback data:', error.message)
+      return this.fallbackCourses.find(course => course.id === id)
+    }
   }
 
   // Get category by ID
   getCategoryById(id) {
-    return this.categories.find(category => category.id === id)
+    return this.fallbackCategories.find(category => category.id === id)
   }
 
   // Get user by ID
-  getUserById(id) {
-    return this.users.find(user => user.id === id)
+  async getUserById(id) {
+    try {
+      return await apiService.getUser(id)
+    } catch (error) {
+      console.warn('API request failed for user:', error.message)
+      const users = await this.getAllUsers()
+      return users.find(user => user.id === id)
+    }
   }
 
   // Get enrollments by user ID
-  getEnrollmentsByUserId(userId) {
-    return this.enrollments.filter(enrollment => enrollment.userId === userId)
+  async getEnrollmentsByUserId(userId) {
+    try {
+      return await apiService.getUserEnrollments(userId)
+    } catch (error) {
+      console.warn('API request failed, using fallback:', error.message)
+      const enrollments = await this.getAllEnrollments()
+      return enrollments.filter(enrollment => enrollment.userId === userId)
+    }
   }
 
   // Get courses by category
-  getCoursesByCategory(categoryId) {
-    return this.courses.filter(course => course.categoryId === categoryId)
+  async getCoursesByCategory(categoryId) {
+    const courses = await this.getAllCourses()
+    return courses.filter(course => course.categoryId === categoryId)
   }
 
   // Get featured courses (top rated)
-  getFeaturedCourses(limit = 3) {
-    return this.courses
-      .sort((a, b) => b.rating - a.rating)
+  async getFeaturedCourses(limit = 3) {
+    const courses = await this.getAllCourses()
+    return courses
+      .sort((a, b) => (b.rating || 0) - (a.rating || 0))
       .slice(0, limit)
   }
 
   // Search courses by title or tags
-  searchCourses(query) {
+  async searchCourses(query) {
+    const courses = await this.getAllCourses()
     const searchTerm = query.toLowerCase()
-    return this.courses.filter(course => 
+    return courses.filter(course => 
       course.title.toLowerCase().includes(searchTerm) ||
       course.description.toLowerCase().includes(searchTerm) ||
-      course.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+      (course.tags && course.tags.some(tag => tag.toLowerCase().includes(searchTerm)))
     )
   }
 
   // Get course statistics
-  getStats() {
-    const totalStudents = new Set(this.enrollments.map(e => e.userId)).size
-    const totalCourses = this.courses.length
-    const averageRating = this.courses.reduce((sum, course) => sum + course.rating, 0) / totalCourses
-    const totalInstructors = new Set(this.users.filter(user => user.role === 'instructor').map(user => user.id)).size
+  async getStats() {
+    try {
+      return await apiService.getStats()
+    } catch (error) {
+      console.warn('API stats failed, calculating from available data:', error.message)
+      
+      const [courses, users, enrollments] = await Promise.all([
+        this.getAllCourses(),
+        this.getAllUsers(),
+        this.getAllEnrollments()
+      ])
 
-    return {
-      totalStudents,
-      totalCourses,
-      averageRating: Math.round(averageRating * 10) / 10,
-      totalInstructors
+      const students = users.filter(user => user.role === 'student')
+      const instructors = users.filter(user => user.role === 'instructor')
+      const totalRating = courses.reduce((sum, course) => sum + (course.rating || 0), 0)
+      const averageRating = courses.length > 0 ? totalRating / courses.length : 0
+
+      return {
+        activeStudents: students.length,
+        expertInstructors: instructors.length,
+        availableCourses: courses.length,
+        averageRating: Math.round(averageRating * 10) / 10,
+        completedCourses: enrollments.filter(e => e.status === 'completed').length
+      }
     }
+  }
+
+  // Clear cache (useful for forcing refresh)
+  clearCache() {
+    this.cache = {
+      courses: null,
+      categories: null,
+      users: null,
+      enrollments: null,
+      lastFetch: null
+    }
+  }
+
+  // API methods for creating/updating data
+  async createCourse(courseData) {
+    const course = await apiService.createCourse(courseData)
+    this.clearCache() // Clear cache to force refresh
+    return course
+  }
+
+  async updateCourse(id, courseData) {
+    const course = await apiService.updateCourse(id, courseData)
+    this.clearCache()
+    return course
+  }
+
+  async createUser(userData) {
+    const user = await apiService.createUser(userData)
+    this.clearCache()
+    return user
+  }
+
+  async updateUser(id, userData) {
+    const user = await apiService.updateUser(id, userData)
+    this.clearCache()
+    return user
+  }
+
+  async createEnrollment(enrollmentData) {
+    const enrollment = await apiService.createEnrollment(enrollmentData)
+    this.clearCache()
+    return enrollment
+  }
+
+  async updateEnrollment(id, enrollmentData) {
+    const enrollment = await apiService.updateEnrollment(id, enrollmentData)
+    this.clearCache()
+    return enrollment
   }
 }
 
