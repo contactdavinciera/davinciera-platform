@@ -13,6 +13,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import dataService from '@/services/dataService'
+import revenueService from '@/services/revenueService'
 
 const InstructorDashboardPage = () => {
   // Mock authenticated user for now
@@ -24,7 +25,10 @@ const InstructorDashboardPage = () => {
 
   const instructorCourses = dataService.getAllCourses().filter(course => course.instructor.id === currentUser.id)
   const totalStudents = instructorCourses.reduce((sum, course) => sum + course.numberOfStudents, 0)
-  const totalEarnings = instructorCourses.reduce((sum, course) => sum + (course.price * course.numberOfStudents * 0.7), 0) // Assuming 70% for instructor
+  
+  // Use revenueService for accurate earnings calculation
+  const earningsData = revenueService.calculateInstructorEarnings(instructorCourses)
+  const totalEarnings = earningsData.totalEarnings
 
   return (
     <div className="container mx-auto py-10 px-4">
@@ -98,7 +102,7 @@ const InstructorDashboardPage = () => {
                   </div>
                   <div className="flex items-center gap-2 mb-2">
                     <DollarSign className="w-4 h-4" />
-                    <span className="text-sm font-medium">${(course.price * course.numberOfStudents * 0.7).toFixed(2)} Estimated</span>
+                    <span className="text-sm font-medium">${earningsData.courseEarnings[course.id]?.totalEarnings.toFixed(2) || '0.00'} Earned</span>
                   </div>
                   <Link to={`/instructor/course/${course.id}/edit`}>
                     <Button variant="outline" className="w-full mt-3">Manage Course</Button>
