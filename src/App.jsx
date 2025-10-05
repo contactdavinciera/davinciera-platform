@@ -15,6 +15,8 @@ import CourseDetail from './components/pages/CourseDetail'
 import StudentDashboardPage from './components/pages/StudentDashboardPage'
 import InstructorDashboardPage from './components/pages/InstructorDashboardPage'
 import Checkout from './components/pages/Checkout'
+import CheckoutSuccess from './components/pages/CheckoutSuccess'
+import CheckoutCancel from './components/pages/CheckoutCancel'
 import AffiliateDashboardPage from './components/pages/AffiliateDashboardPage'
 
 // Auth Pages
@@ -80,6 +82,8 @@ function App() {
                   </ProtectedRoute>
                 } 
               />
+              <Route path="/checkout/success" element={<CheckoutSuccess />} />
+              <Route path="/checkout/cancel" element={<CheckoutCancel />} />
 
               {/* Legacy route for affiliates */}
               <Route 

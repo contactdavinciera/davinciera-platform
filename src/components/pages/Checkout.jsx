@@ -12,11 +12,13 @@ import {
   Star,
   Users
 } from 'lucide-react'
+import { createCheckoutSessionForCart } from '@/services/stripeService'
 
 const Checkout = ({ cart, removeFromCart }) => {
   const [couponCode, setCouponCode] = useState('')
   const [paymentMethod, setPaymentMethod] = useState('card')
   const [appliedCoupon, setAppliedCoupon] = useState(null)
+  const [isProcessing, setIsProcessing] = useState(false)
 
   // Mock cart data if empty
   const mockCart = cart.length > 0 ? cart : [
@@ -57,6 +59,23 @@ const Checkout = ({ cart, removeFromCart }) => {
   const removeCoupon = () => {
     setAppliedCoupon(null)
     setCouponCode('')
+  }
+
+  const handleCheckout = async () => {
+    if (paymentMethod !== 'card') {
+      alert('Apenas pagamentos com cartão de crédito estão disponíveis no momento.')
+      return
+    }
+
+    try {
+      setIsProcessing(true)
+      await createCheckoutSessionForCart(mockCart)
+    } catch (error) {
+      console.error('Erro no checkout:', error)
+      alert('Erro ao processar pagamento. Tente novamente.')
+    } finally {
+      setIsProcessing(false)
+    }
   }
 
   return (
@@ -237,9 +256,13 @@ const Checkout = ({ cart, removeFromCart }) => {
                   </div>
                 </div>
 
-                <Button className="w-full mt-6 davinci-gradient text-lg py-6">
+                <Button 
+                  className="w-full mt-6 davinci-gradient text-lg py-6"
+                  onClick={handleCheckout}
+                  disabled={isProcessing}
+                >
                   <Lock className="w-5 h-5 mr-2" />
-                  Complete Purchase
+                  {isProcessing ? 'Processing...' : 'Complete Purchase'}
                 </Button>
                 
                 <div className="flex items-center justify-center space-x-2 mt-4 text-sm text-muted-foreground">
